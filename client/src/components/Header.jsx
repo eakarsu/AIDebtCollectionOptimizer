@@ -6,6 +6,8 @@ const navLinks = [
   { path: '/', label: 'Dashboard' },
   { path: '/reports', label: 'Reports' },
   { path: '/calculator', label: 'Calculator' },
+  { path: '/ai-features', label: 'AI Features' },
+  { path: '/ai-new', label: 'AI Scoring' },
   { path: '/audit', label: 'Audit' },
   { path: '/settings', label: 'Settings' },
 ];

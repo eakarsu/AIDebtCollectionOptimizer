@@ -1,3 +1,16 @@
+
+// // === Batch 02 Gaps & Frontend Mounts ===
+import CfPredictiveContactStrategy from './pages/CfPredictiveContactStrategy';
+import CfDynamicSettlementOptimization from './pages/CfDynamicSettlementOptimization';
+import CfFraudDetection from './pages/CfFraudDetection';
+import CfPredictiveComplianceRisk from './pages/CfPredictiveComplianceRisk';
+import CfDebtorSegmentationTargeting from './pages/CfDebtorSegmentationTargeting';
+import GapCriticalOnly1AiEndpointFor30RoutesMissingScoreDebt from './pages/GapCriticalOnly1AiEndpointFor30RoutesMissingScoreDebt';
+import GapNoPhoneSystemIntegrationForAutomatedOutreachSmsEmail from './pages/GapNoPhoneSystemIntegrationForAutomatedOutreachSmsEmail';
+import GapLimitedCreditBureauIntegration from './pages/GapLimitedCreditBureauIntegration';
+import GapNoAutomatedFdcpaTcpaComplianceValidationEngine from './pages/GapNoAutomatedFdcpaTcpaComplianceValidationEngine';
+import GapNoWebhooks from './pages/GapNoWebhooks';
+import GapNoMobileApiSurface from './pages/GapNoMobileApiSurface';
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
@@ -8,6 +21,8 @@ import Reports from './pages/Reports'
 import Settings from './pages/Settings'
 import AuditLog from './pages/AuditLog'
 import SettlementCalculator from './pages/SettlementCalculator'
+import AIFeatures from './pages/AIFeatures'
+import AINewFeatures from './pages/AINewFeatures'
 import Header from './components/Header'
 import Toast from './components/Toast'
 
@@ -66,8 +81,23 @@ export default function App() {
           <Route path="/settings" element={<Settings showToast={showToast} user={user} />} />
           <Route path="/audit" element={<AuditLog showToast={showToast} />} />
           <Route path="/calculator" element={<SettlementCalculator showToast={showToast} />} />
+          <Route path="/ai-features" element={<AIFeatures showToast={showToast} />} />
+          <Route path="/ai-new" element={<AINewFeatures showToast={showToast} />} />
           <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        
+        {/* // === Batch 02 Gaps & Frontend Mounts === */}
+        <Route path="/cf/predictive-contact-strategy" element={<CfPredictiveContactStrategy />} />
+        <Route path="/cf/dynamic-settlement-optimization" element={<CfDynamicSettlementOptimization />} />
+        <Route path="/cf/fraud-detection" element={<CfFraudDetection />} />
+        <Route path="/cf/predictive-compliance-risk" element={<CfPredictiveComplianceRisk />} />
+        <Route path="/cf/debtor-segmentation-targeting" element={<CfDebtorSegmentationTargeting />} />
+        <Route path="/gap/critical-only-1-ai-endpoint-for-30-routes-missing-score-debt" element={<GapCriticalOnly1AiEndpointFor30RoutesMissingScoreDebt />} />
+        <Route path="/gap/no-phone-system-integration-for-automated-outreach-sms-email" element={<GapNoPhoneSystemIntegrationForAutomatedOutreachSmsEmail />} />
+        <Route path="/gap/limited-credit-bureau-integration" element={<GapLimitedCreditBureauIntegration />} />
+        <Route path="/gap/no-automated-fdcpa-tcpa-compliance-validation-engine" element={<GapNoAutomatedFdcpaTcpaComplianceValidationEngine />} />
+        <Route path="/gap/no-webhooks" element={<GapNoWebhooks />} />
+        <Route path="/gap/no-mobile-api-surface" element={<GapNoMobileApiSurface />} />
+      </Routes>
         {toast && <Toast {...toast} />}
       </div>
     </BrowserRouter>

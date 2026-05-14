@@ -1,8 +1,9 @@
 const express = require('express');
 const { callOpenRouter } = require('../services/openrouter');
+const { aiRateLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 
-router.post('/analyze', async (req, res) => {
+router.post('/analyze', aiRateLimiter, async (req, res) => {
   try {
     const { prompt, context, feature } = req.body;
 
