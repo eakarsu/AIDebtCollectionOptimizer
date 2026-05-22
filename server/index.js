@@ -95,6 +95,7 @@ app.use('/api/bulk', bulkRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/settlement-calc', settlementCalcRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/hardship-program-fit', require('./routes/hardshipProgramFit'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

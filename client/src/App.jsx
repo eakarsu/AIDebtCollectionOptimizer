@@ -11,6 +11,9 @@ import GapLimitedCreditBureauIntegration from './pages/GapLimitedCreditBureauInt
 import GapNoAutomatedFdcpaTcpaComplianceValidationEngine from './pages/GapNoAutomatedFdcpaTcpaComplianceValidationEngine';
 import GapNoWebhooks from './pages/GapNoWebhooks';
 import GapNoMobileApiSurface from './pages/GapNoMobileApiSurface';
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
 import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage'
@@ -23,6 +26,7 @@ import AuditLog from './pages/AuditLog'
 import SettlementCalculator from './pages/SettlementCalculator'
 import AIFeatures from './pages/AIFeatures'
 import AINewFeatures from './pages/AINewFeatures'
+import HardshipProgramFit from './pages/HardshipProgramFit'
 import Header from './components/Header'
 import Toast from './components/Toast'
 
@@ -74,6 +78,9 @@ export default function App() {
       <div className="app-container">
         <Header user={user} onLogout={handleLogout} />
         <Routes>
+        <Route path="/codex/custom-viz" element={<CodexCustomVizFeature />} />
+        <Route path="/codex/operations" element={<CodexOperationsFeature />} />
+
           <Route path="/" element={<Dashboard />} />
           <Route path="/feature/:featureKey" element={<FeaturePage showToast={showToast} />} />
           <Route path="/debtor/:id" element={<DebtorProfile showToast={showToast} />} />
@@ -83,6 +90,7 @@ export default function App() {
           <Route path="/calculator" element={<SettlementCalculator showToast={showToast} />} />
           <Route path="/ai-features" element={<AIFeatures showToast={showToast} />} />
           <Route path="/ai-new" element={<AINewFeatures showToast={showToast} />} />
+          <Route path="/hardship-program-fit" element={<HardshipProgramFit />} />
           <Route path="*" element={<Navigate to="/" />} />
         
         {/* // === Batch 02 Gaps & Frontend Mounts === */}
