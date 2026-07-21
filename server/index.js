@@ -1,4 +1,13 @@
 require('dotenv').config();
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  throw new Error('JWT_SECRET must be configured with at least 32 characters');
+}
+for (const key of ['DB_NAME', 'DB_USER', 'DB_PASSWORD']) {
+  if (!process.env[key]) throw new Error(`${key} is required`);
+}
+if (process.env.NODE_ENV === 'production' && (!process.env.CORS_ORIGINS || process.env.CORS_ORIGINS.includes('*'))) {
+  throw new Error('Production CORS_ORIGINS must be an explicit allowlist');
+}
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -32,8 +41,6 @@ const bulkRoutes = require('./routes/bulk');
 const reportRoutes = require('./routes/reports');
 const settlementCalcRoutes = require('./routes/settlement-calc');
 const userRoutes = require('./routes/users');
-
-const { runMigrations } = require('./seeds/migrations');
 
 const app = express();
 const PORT = process.env.SERVER_PORT || 3001;
@@ -96,40 +103,13 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/settlement-calc', settlementCalcRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/hardship-program-fit', require('./routes/hardshipProgramFit'));
+app.use('/api/governed-workflows', require('./routes/governedWorkflow'));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Run migrations then start server
-runMigrations()
-  .then(() => {
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-critical-only-1-ai-endpoint-for-30-routes-missing-score-debt', require('./routes/gap_critical_only_1_ai_endpoint_for_30_routes_missing_score_debt'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-phone-system-integration-for-automated-outreach-sms-email', require('./routes/gap_no_phone_system_integration_for_automated_outreach_sms_email'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-limited-credit-bureau-integration', require('./routes/gap_limited_credit_bureau_integration'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-automated-fdcpa-tcpa-compliance-validation-engine', require('./routes/gap_no_automated_fdcpa_tcpa_compliance_validation_engine'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-webhooks', require('./routes/gap_no_webhooks'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-mobile-api-surface', require('./routes/gap_no_mobile_api_surface'));
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to run migrations:', err.message);
-    // Start server anyway to not block on migration failures
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT} (migrations failed)`);
-    });
-  });
+// Schema changes are explicit operator actions via scripts/migrate.sh.
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

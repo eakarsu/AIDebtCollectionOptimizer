@@ -21,22 +21,15 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, tenant_id: user.tenant_id },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
-    res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role, tenant_id: user.tenant_id } });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-router.get('/defaults', (req, res) => {
-  res.json({
-    email: process.env.DEFAULT_EMAIL || 'admin@debtoptimizer.com',
-    password: process.env.DEFAULT_PASSWORD || 'admin123'
-  });
 });
 
 router.get('/me', async (req, res) => {
@@ -46,9 +39,13 @@ router.get('/me', async (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Keep the identity proof available while an additive tenant migration is
+    // being rolled out. The signed claim remains the tenant authority; the
+    // core user lookup must not fail merely because a legacy schema has not
+    // gained the optional tenant_id column yet.
     const result = await pool.query('SELECT id, email, name, role FROM users WHERE id = $1', [decoded.id]);
     if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    res.json(result.rows[0]);
+    res.json({ user: { ...result.rows[0], tenant_id: decoded.tenant_id || null } });
   } catch (err) {
     res.status(403).json({ error: 'Invalid token' });
   }
