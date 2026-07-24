@@ -26,13 +26,16 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 cd "$project_dir"
+if [[ "${MIGRATE_ON_START:-false}" == true ]]; then
+  node server/scripts/migrate.js
+  node server/scripts/provision-admin.js
+fi
 node server/index.js &
 backend_pid=$!
 
 cd "$project_dir/client"
-npm run dev &
+npm run dev -- --host "${FRONTEND_HOST:-127.0.0.1}" --port "${FRONTEND_PORT:-${CLIENT_PORT:-3000}}" &
 frontend_pid=$!
 
 echo "Application processes started. Startup does not install, migrate, seed, or terminate unrelated processes."
 wait "$backend_pid" "$frontend_pid"
-
