@@ -51,4 +51,14 @@ router.get('/me', async (req, res) => {
   }
 });
 
+router.get('/defaults', (req, res) => {
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DEMO_CREDENTIAL_AUTOFILL === 'false') {
+    return res.status(404).json({ error: 'Demo credentials are disabled' });
+  }
+  if (!process.env.DEMO_EMAIL || !process.env.DEMO_PASSWORD) {
+    return res.status(503).json({ error: 'Demo account is not configured' });
+  }
+  return res.json({ email: process.env.DEMO_EMAIL, password: process.env.DEMO_PASSWORD });
+});
+
 module.exports = router;

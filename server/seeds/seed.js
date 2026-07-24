@@ -333,9 +333,13 @@ async function seed() {
     console.log('All tables created successfully.');
 
     // Seed Users
-    const hash = await bcrypt.hash(process.env.DEFAULT_PASSWORD || 'admin123', 10);
+    const demoEmail = process.env.DEMO_EMAIL || '';
+    const demoPassword = process.env.DEMO_PASSWORD || '';
+    if (!demoEmail.includes('@')) throw new Error('DEMO_EMAIL must be a valid email address');
+    if (demoPassword.length < 12) throw new Error('DEMO_PASSWORD must be at least 12 characters');
+    const hash = await bcrypt.hash(demoPassword, 10);
     await client.query(`INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, $4)`,
-      [process.env.DEFAULT_EMAIL || 'admin@debtoptimizer.com', hash, 'Admin User', 'admin']);
+      [demoEmail, hash, 'Admin User', 'admin']);
     console.log('User seeded.');
 
     // Seed Debtors (15 items)
