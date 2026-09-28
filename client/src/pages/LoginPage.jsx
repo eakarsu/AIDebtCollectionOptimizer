@@ -43,7 +43,7 @@ export default function LoginPage({ onLogin, showToast }) {
         </div>
 
         <button className="btn btn-auto-fill btn-full btn-lg" onClick={handleAutoFill}>
-          Auto-Fill Credentials
+          Auto Fill Demo Credentials
         </button>
 
         <form onSubmit={handleSubmit}>
