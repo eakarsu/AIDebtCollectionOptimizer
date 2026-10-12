@@ -1,3 +1,4 @@
+import AIReportLibrary from "./components/AIReportLibrary";
 
 // // === Batch 02 Gaps & Frontend Mounts ===
 import CfPredictiveContactStrategy from './pages/CfPredictiveContactStrategy';
@@ -74,7 +75,7 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
+    <><AIReportLibrary floating /><BrowserRouter>
       <div className="app-container">
         <Header user={user} onLogout={handleLogout} />
         <Routes>
@@ -108,6 +109,6 @@ export default function App() {
       </Routes>
         {toast && <Toast {...toast} />}
       </div>
-    </BrowserRouter>
+    </BrowserRouter></>
   );
 }

@@ -9,11 +9,12 @@ export default function LoginPage({ onLogin, showToast }) {
   const handleAutoFill = async () => {
     try {
       const defaults = await getDefaults();
+      if (!defaults?.email || !defaults?.password) throw new Error('Demo account is not configured');
       setEmail(defaults.email);
       setPassword(defaults.password);
-      showToast('Credentials populated!', 'info');
+      showToast('Demo credentials filled. Select Sign In to continue.', 'info');
     } catch (err) {
-      showToast('Failed to get defaults', 'error');
+      showToast('Demo credentials are unavailable in this environment.', 'error');
     }
   };
 
@@ -42,8 +43,8 @@ export default function LoginPage({ onLogin, showToast }) {
           <p>Compliance-aware, empathetic AI-powered collections</p>
         </div>
 
-        <button className="btn btn-auto-fill btn-full btn-lg" onClick={handleAutoFill}>
-          Auto Fill Demo Credentials
+        <button type="button" className="btn btn-auto-fill btn-full btn-lg" disabled={loading} onClick={handleAutoFill}>
+          Fill Demo Credentials
         </button>
 
         <form onSubmit={handleSubmit}>

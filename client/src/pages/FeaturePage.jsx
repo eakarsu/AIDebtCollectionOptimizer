@@ -5,6 +5,7 @@ import { fetchItems, createItem, updateItem, deleteItem, aiAnalyze, bulkUpdate, 
 import Pagination from '../components/Pagination'
 import FilterPanel from '../components/FilterPanel'
 import BulkActions from '../components/BulkActions'
+import AIReport from '../components/AIReport.jsx'
 
 function formatValue(value, format) {
   if (value === null || value === undefined) return '\u2014';
@@ -458,6 +459,13 @@ export default function FeaturePage({ showToast }) {
         </div>
         <div className="ai-body">
           <form className="ai-prompt-form" onSubmit={handleAiAnalyze}>
+            <div className="ai-actions" aria-label="Example AI prompts">
+              {[
+                `Review ${feature.title.toLowerCase()} and summarize priorities, risks, and missing evidence.`,
+                `Analyze the selected ${feature.title.toLowerCase()} record and propose compliant next steps.`,
+                `Prepare an executive brief on ${feature.title.toLowerCase()} with assumptions and actions.`,
+              ].map((sample, index) => <button key={index} type="button" className="btn btn-secondary" disabled={index === 1 && !selectedItem} title={index === 1 && !selectedItem ? 'Select a real record first' : undefined} onClick={() => setAiPrompt(sample)}>{['Review example', 'Record example', 'Executive example'][index]}</button>)}
+            </div>
             <input
               placeholder={`Ask AI about ${feature.title.toLowerCase()}... (e.g., "${feature.aiPrompt}")`}
               value={aiPrompt}
@@ -480,7 +488,7 @@ export default function FeaturePage({ showToast }) {
               {aiResult.success || aiResult.mock ? (
                 <div className="ai-result">
                   <div className="ai-result-content">
-                    {renderAiContent(aiResult.content || aiResult.result)}
+                    <AIReport response={aiResult.content ?? aiResult.result ?? aiResult} title={`${feature.title} analysis`} />
                   </div>
                   <div className="ai-meta">
                     {aiResult.model && (

@@ -1,3 +1,6 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
+import AIReport from '../components/AIReport.jsx';
 import React, { useState } from 'react';
 
 const headers = () => ({
@@ -98,6 +101,8 @@ const tools = [
 ];
 
 export default function AINewFeatures({ showToast }) {
+  const fullAIExamples = useFullAIExamples();
+
   const [activeId, setActiveId] = useState(tools[0].id);
   const [form, setForm] = useState({});
   const [running, setRunning] = useState(false);
@@ -151,7 +156,7 @@ export default function AINewFeatures({ showToast }) {
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ padding: 24, maxWidth: 1100, margin: '0 auto' }} data-full-ai-workspace="AINewFeatures"><FullAIExamples controller={fullAIExamples} />
       <h1 style={{ marginBottom: 4 }}>AI New Features</h1>
       <p style={{ color: 'var(--gray-600, #6b7280)', marginBottom: 16 }}>
         Stateless debtor risk scoring and payment-likelihood prediction.
@@ -192,7 +197,7 @@ export default function AINewFeatures({ showToast }) {
                   placeholder={f.placeholder || ''}
                   value={form[f.name] || ''}
                   onChange={e => setForm({ ...form, [f.name]: e.target.value })}
-                  style={{ width: '100%', padding: 8, border: '1px solid var(--gray-300, #d1d5db)', borderRadius: 4, fontFamily: 'inherit' }}
+                  style={{ width: '100%', padding: 8, border: '1px solid var(--gray-300, #d1d5db)', borderRadius: 4, fontFamily: 'inherit' }} data-full-ai-field={fullAIExamples.bind({ current: form[f.name] || '', change: e => setForm({ ...form, [f.name]: e.target.value }), label: "form[f.name]", manual: false, json: false }, "p1-7228", [(typeof f === 'object' ? f?.key ?? f?.name ?? f?.id ?? '' : f),f.name].join(":"))}
                 />
               ) : (
                 <input
@@ -200,7 +205,7 @@ export default function AINewFeatures({ showToast }) {
                   placeholder={f.placeholder || ''}
                   value={form[f.name] || ''}
                   onChange={e => setForm({ ...form, [f.name]: e.target.value })}
-                  style={{ width: '100%', padding: 8, border: '1px solid var(--gray-300, #d1d5db)', borderRadius: 4 }}
+                  style={{ width: '100%', padding: 8, border: '1px solid var(--gray-300, #d1d5db)', borderRadius: 4 }} data-full-ai-field={fullAIExamples.bind({ current: form[f.name] || '', change: e => setForm({ ...form, [f.name]: e.target.value }), label: "form[f.name]", manual: false, json: false }, "p1-7640", [(typeof f === 'object' ? f?.key ?? f?.name ?? f?.id ?? '' : f),f.name].join(":"))}
                 />
               )}
             </div>
@@ -234,19 +239,7 @@ export default function AINewFeatures({ showToast }) {
           {!running && !result && (
             <div style={{ color: 'var(--gray-400, #9ca3af)', fontSize: 13 }}>No result yet. Run a tool to see output.</div>
           )}
-          {result && (
-            <pre style={{
-              background: 'var(--gray-50, #f9fafb)',
-              padding: 12,
-              borderRadius: 4,
-              fontSize: 12,
-              overflow: 'auto',
-              maxHeight: 600,
-              whiteSpace: 'pre-wrap'
-            }}>
-              {typeof result[tool.resultKey] === 'string' ? result[tool.resultKey] : JSON.stringify(result, null, 2)}
-            </pre>
-          )}
+          {result && <AIReport response={result[tool.resultKey] ?? result} title={tool.title} />}
         </div>
       </div>
     </div>

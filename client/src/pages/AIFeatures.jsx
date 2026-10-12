@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { fetchItems } from '../services/api';
+import AIReport from '../components/AIReport.jsx';
 
 const headers = () => ({
   'Content-Type': 'application/json',
@@ -210,9 +211,7 @@ export default function AIFeatures({ showToast }) {
       {result && (
         <div className="card" style={{ padding: 16, marginTop: 16 }}>
           <h3>Result</h3>
-          <pre style={{ background: '#0f172a', color: '#cbd5e1', padding: 12, borderRadius: 6, overflow: 'auto', maxHeight: 480 }}>
-            {JSON.stringify(result, null, 2)}
-          </pre>
+          <AIReport response={result} title="AI feature result" />
         </div>
       )}
     </div>
